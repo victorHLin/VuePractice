@@ -4,7 +4,7 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/',
+      path: '/itemList',
       name: 'items',
       component: () => import('../views/ItemsView.vue')
     },
@@ -14,7 +14,7 @@ const router = createRouter({
       component: () => import('../views/TodoView.vue')
     },
     {
-      path: '/order',
+      path: '/',
       name: 'order',
       component: () => import('../views/OrderView.vue')
     }
