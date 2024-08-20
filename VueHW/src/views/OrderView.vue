@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed } from 'vue'
-import ItemCard from '@/components/ItemCard.vue'
+import ItemList from '@/components/ItemList.vue'
+import ItemCart from '@/components/ItemCart.vue'
 
 const items = ref([
   {
@@ -55,8 +56,6 @@ const items = ref([
 
 const orders = ref([])
 
-const comment = ref('')
-
 const updateOrder = (item) => {
   let exist = orders.value.find((k) => {
     if (k.id == item.id) {
@@ -85,9 +84,6 @@ const total = computed(() => {
     return pre + next.price * next.amount
   }, 0)
 })
-const subTotal = (item) => {
-  return item.price * item.amount
-}
 
 const deleteItem = (item) => {
   const index = orders.value.findIndex((k) => k.id == item.id)
@@ -100,15 +96,14 @@ const orderCreated = ref({
   total: 0
 })
 
-const submitOrder = () => {
+const submitOrder = (comment) => {
   orderCreated.value = {
     id: new Date().getTime(),
     orders: orders.value,
-    comment: comment.value,
+    comment: comment,
     total: total.value
   }
   orders.value = []
-  comment.value = ''
 }
 
 // const submitOrder = () => {
@@ -128,69 +123,15 @@ const submitOrder = () => {
       <div class="row">
         <div class="col-md-4">
           <div class="list-group">
-            <ItemCard :items="items" @updateOrder="updateOrder" />
+            <ItemList :items="items" @updateOrder="updateOrder" />
           </div>
         </div>
-        <div class="col-md-8">
-          <table class="table">
-            <thead>
-              <tr>
-                <th scope="col" width="50">Remove</th>
-                <th scope="col">Item</th>
-                <th scope="col">Description</th>
-                <th scope="col" width="90">Amount</th>
-                <th scope="col">Price</th>
-                <th scope="col">SubTotal</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="item in orders" :key="item.id">
-                <td>
-                  <button type="button" class="btn btn-sm" @click="deleteItem(item)">x</button>
-                </td>
-                <td>{{ item.title }}</td>
-                <td>
-                  <small>{{ item.description }}</small>
-                </td>
-                <td>
-                  <select class="form-select" v-model="item.amount">
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                    <option value="6">6</option>
-                    <option value="7">7</option>
-                    <option value="8">8</option>
-                    <option value="9">9</option>
-                    <option value="10">10</option>
-                  </select>
-                </td>
-                <td>${{ item.price }}</td>
-                <td>${{ subTotal(item) }}</td>
-              </tr>
-            </tbody>
-          </table>
-          <div v-if="orders.length === 0" class="alert alert-primary text-center" role="alert">
-            Please Select Item
-          </div>
-          <div v-else>
-            <div class="text-end mb-3">
-              <h5>
-                Total: <span>{{ total }}</span>
-              </h5>
-            </div>
-            <textarea
-              class="form-control mb-3"
-              rows="3"
-              placeholder="Comment"
-              v-model="comment"
-            ></textarea>
-            <div class="text-end">
-              <button class="btn btn-primary" @click="submitOrder()">Submit</button>
-            </div>
-          </div>
-        </div>
+        <ItemCart
+          :orders="orders"
+          :total="total"
+          @submitOrder="submitOrder"
+          @deleteItem="deleteItem"
+        />
       </div>
       <hr />
       <div class="row justify-content-center">
@@ -213,7 +154,7 @@ const submitOrder = () => {
                   <tr v-for="item in orderCreated.orders" :key="item.id">
                     <td>{{ item.title }}</td>
                     <td>{{ item.amount }}</td>
-                    <td>${{ subTotal(item) }}</td>
+                    <td>${{ item.price * item.amount }}</td>
                   </tr>
                 </tbody>
               </table>

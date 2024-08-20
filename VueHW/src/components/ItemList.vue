@@ -2,7 +2,7 @@
 import { defineProps, defineEmits } from 'vue'
 
 defineProps(['items'])
-defineEmits(['updateOrder'])
+const emit = defineEmits(['updateOrder'])
 </script>
 
 <template>
@@ -11,7 +11,7 @@ defineEmits(['updateOrder'])
     class="list-group-item list-group-item-action"
     v-for="item in items"
     :key="item.id"
-    @click="$emit('updateOrder', item)"
+    @click="emit('updateOrder', item)"
     ><div class="d-flex w-100 justify-content-between">
       <h5 class="mb-1">{{ item.title }}</h5>
       <small>${{ item.price }}</small>
