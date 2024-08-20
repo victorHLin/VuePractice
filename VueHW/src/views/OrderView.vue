@@ -2,6 +2,7 @@
 import { ref, computed } from 'vue'
 import ItemList from '@/components/ItemList.vue'
 import ItemCart from '@/components/ItemCart.vue'
+import ItemOrder from '@/components/ItemOrder.vue'
 
 const items = ref([
   {
@@ -121,11 +122,8 @@ const submitOrder = (comment) => {
   <div id="root">
     <div class="container mt-5">
       <div class="row">
-        <div class="col-md-4">
-          <div class="list-group">
-            <ItemList :items="items" @updateOrder="updateOrder" />
-          </div>
-        </div>
+        <ItemList :items="items" @updateOrder="updateOrder" />
+
         <ItemCart
           :orders="orders"
           :total="total"
@@ -134,42 +132,7 @@ const submitOrder = (comment) => {
         />
       </div>
       <hr />
-      <div class="row justify-content-center">
-        <div v-if="!orderCreated.id" class="alert alert-secondary text-center" role="alert">
-          Order Not Created
-        </div>
-        <div v-else class="card">
-          <div class="card-body">
-            <div class="card-title">
-              <h5>Order</h5>
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th scope="col">Item</th>
-                    <th scope="col">Amount</th>
-                    <th scope="col">SubTotal</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="item in orderCreated.orders" :key="item.id">
-                    <td>{{ item.title }}</td>
-                    <td>{{ item.amount }}</td>
-                    <td>${{ item.price * item.amount }}</td>
-                  </tr>
-                </tbody>
-              </table>
-              <div class="text-end">
-                Comment: <span>{{ orderCreated.comment }}</span>
-              </div>
-              <div class="text-end">
-                <h5>
-                  Total: <span>${{ orderCreated.total }}</span>
-                </h5>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <ItemOrder :orderCreated="orderCreated" />
     </div>
   </div>
 </template>
