@@ -1,5 +1,6 @@
 <script setup>
 import { ref, computed } from 'vue'
+import ItemCard from '@/components/ItemCard.vue'
 
 const items = ref([
   {
@@ -109,6 +110,16 @@ const submitOrder = () => {
   orders.value = []
   comment.value = ''
 }
+
+// const submitOrder = () => {
+//   orderCreated.value.id = new Date().getTime()
+//   orderCreated.value.orders = orders.value
+//   orderCreated.value.comment = comment.value
+//   orderCreated.value.total = total.value
+
+//   orders.value = []
+//   comment.value = ''
+// }
 </script>
 
 <template>
@@ -117,18 +128,7 @@ const submitOrder = () => {
       <div class="row">
         <div class="col-md-4">
           <div class="list-group">
-            <a
-              href="#"
-              class="list-group-item list-group-item-action"
-              v-for="item in items"
-              :key="item.id"
-              @click="updateOrder(item)"
-              ><div class="d-flex w-100 justify-content-between">
-                <h5 class="mb-1">{{ item.title }}</h5>
-                <small>${{ item.price }}</small>
-              </div>
-              <p class="mb-1">{{ item.description }}</p></a
-            >
+            <ItemCard :items="items" @updateOrder="updateOrder" />
           </div>
         </div>
         <div class="col-md-8">
